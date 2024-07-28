@@ -1,22 +1,57 @@
-// import { getUser } from "../../utils/getUser";
+import { getUser } from "../../utils/getUser";
+import { logoutUser } from "../logout/logout";
 
-// export const navbarHandler = async () => {
-//   try {
-//     const user = await getUser();
-//     /** Get elements */
-//     const navbarLeftProfileEl = document.getElementById("nav__profile") as HTMLDivElement;
-//     const navbarLoginEl = document.getElementById("nav__login") as HTMLDivElement;
-//     const navbarSignupEl = document.getElementById("nav__signup") as HTMLDivElement;
-//     const navbarUploadEl = document.getElementById("nav__upload") as HTMLDivElement;
-  
-//     if (user) {
-//       navbarLoginEl.classList.add("hidden");
-//       navbarSignupEl.classList.add("hidden");
-//       navbarLeftProfileEl.classList.remove("hidden");
-//       navbarLeftProfileEl.innerHTML = `<img src="/public/userIcon.png">`;
-//       navbarUploadEl.classList.remove("hidden");
-//     }
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+/** Get elements */
+const navbarProfileElement = document.getElementById(
+  "nav-profile"
+) as HTMLImageElement;
+const sidebarLoginElement = document.getElementById(
+  "sidebar-login"
+) as HTMLLIElement;
+const sidebarSignupElement = document.getElementById(
+  "sidebar-signup"
+) as HTMLLIElement;
+const sidebarUploadElement = document.getElementById(
+  "sidebar-upload"
+) as HTMLLIElement;
+const sidebarLogoutElement = document.getElementById(
+  "sidebar-logout"
+) as HTMLDivElement;
+const sidebarChangePasswordElement = document.getElementById(
+  "sidebar-change-password"
+) as HTMLLIElement;
+const sidebarChangeProfileElement = document.getElementById(
+  "sidebar-change-profile"
+) as HTMLLIElement;
+
+export const navbarHandler = async () => {
+  try {
+    const user = await getUser();
+    console.log(user);
+    if (user) {
+      navbarProfileElement.src = user.profileUrl || "/public/userIcon.png";
+      sidebarLoginElement.classList.add("hidden");
+      sidebarSignupElement.classList.add("hidden");
+    } else {
+      sidebarUploadElement.classList.add("hidden");
+      sidebarLogoutElement.classList.add("hidden");
+      sidebarChangeProfileElement.classList.add("hidden");
+      sidebarChangePasswordElement.classList.add("hidden");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const logoutHandler = () => {
+  sidebarLogoutElement.addEventListener("click", async (event) => {
+    event.preventDefault();
+    try {
+      await logoutUser();
+      navbarHandler();
+      window.location.href ="/";
+    } catch (error) {
+      console.error(error);
+    }
+  });
+};

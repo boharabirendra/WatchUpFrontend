@@ -5,6 +5,10 @@ module.exports = {
     extend: {
       colors: {
         navbarcolor: '#009270', 
+        bodybgcolor: '#100E0E',
+        bglikebtn: '#303030',
+        bgdescription: '#2B2A2A',
+        bgbuttondisabledcolor: '#272727'
       },
     },
   },
