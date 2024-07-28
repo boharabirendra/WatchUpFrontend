@@ -4,7 +4,7 @@ import { formatDuration, formatViews } from "../../utils/formatDurationAndViews"
 export const VideoCard = (video: IVideo) => `
   <div id="video-item" class="group cursor-pointer flex flex-col w-full max-w-xs transition-all duration-300 hover:transform hover:scale-105" 
     data-source="${video.playbackUrl}" 
-    data-videoPublicId="${video.videoPublicId}"
+    data-id="${video.videoPublicId}"
     data-title="${video.title}">
     <div class="relative w-full h-48 overflow-hidden rounded-lg shadow-lg bg-gray-800">
       <img src="${video.thumbnailUrl}" alt="${video.title}" class="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110" />

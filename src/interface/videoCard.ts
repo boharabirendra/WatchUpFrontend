@@ -11,10 +11,11 @@ export interface IVideo{
     duration: number;
 }
 
-export interface IVideoData{
-    username: string;
+export interface IVideoInfo{
+    fullName: string;
     views: number;
     likes: number;
     description: string;
+    title: string;
 }
 

@@ -20,9 +20,9 @@ export const comments:ICommentCard[] = [
 
 
 export const CommentCard = (email: string, comment: string, imageSrc = "./public/sample.jpeg") => `
-  <div class="mt-8 flex gap-3">
+  <div class="mt-8 flex gap-4">
     <div>
-      <img src="${imageSrc}" class="h-12 w-12 rounded-full" alt="user" />
+      <img src="${imageSrc}" class="h-10 w-10 rounded-full" alt="user" />
     </div>
     <div>
        <p class="text-sm text-gray-100">@${email}</p>

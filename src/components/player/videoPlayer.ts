@@ -15,8 +15,8 @@ export class VideoPlayer {
   private videoElement: HTMLVideoElement;
   private hls: Hls | null = null;
   
-  constructor(videoElementId: string, source: string) {
-    this.videoElement = document.getElementById(videoElementId) as HTMLVideoElement;
+  constructor(videoElement: HTMLVideoElement, source: string) {
+    this.videoElement = videoElement;
     this.initializePlayer(source);
   }
   

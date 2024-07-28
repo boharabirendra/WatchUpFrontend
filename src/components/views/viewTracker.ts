@@ -7,10 +7,8 @@ export class ViewTracker {
   videoElement: HTMLVideoElement;
   viewTimeout: number | null = null;
 
-  constructor(videoElementId: string, videoPublicId: string) {
-    this.videoElement = document.getElementById(
-      videoElementId
-    ) as HTMLVideoElement;
+  constructor(videoElementId: HTMLVideoElement, videoPublicId: string) {
+    this.videoElement = videoElementId;
     this.videoPublicId = videoPublicId;
     this.setupTracking();
   }
