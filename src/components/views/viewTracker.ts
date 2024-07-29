@@ -46,7 +46,7 @@ export class ViewTracker {
 
   async recordView() {
     try {
-      const response = await axios.put(
+      await axios.put(
         `${BASE_URL}/videos/update-views/${this.videoPublicId}`,
         {},
         {
@@ -55,7 +55,6 @@ export class ViewTracker {
           },
         }
       );
-      console.log(response.data);
     } catch (error) {
       this.clearViewTimer();
       console.log(error);

@@ -2,14 +2,10 @@ import axios from "axios";
 import { IVideo } from "../../interface/videoCard";
 import { VideoCard } from "../cards/videoCard";
 import { BASE_URL } from "../../constants/constants";
-// import { navbarHandler } from "../nav/navbarHandler";
-
-/**get search element */
-const searchEl = document.getElementById("search") as HTMLInputElement;
 
 
-async function fetchVideos(): Promise<string> {
-  const filter = searchEl.value.trim();
+
+async function fetchVideos(filter: string): Promise<string> {
   /**alter query if search text is there */
   const url = filter
     ? `${BASE_URL}/videos/get-videos?q=${filter}`
@@ -21,6 +17,9 @@ async function fetchVideos(): Promise<string> {
       },
     });
     const videosArray: IVideo[] = response.data.data;
+    if(videosArray.length === 0){
+      return `<h1 class="text-xl">Sorry, no videos found! </h1>`;
+    }
     const videos = videosArray
       .map((video: IVideo) => VideoCard(video))
       .join("");
@@ -31,7 +30,9 @@ async function fetchVideos(): Promise<string> {
   }
 }
 
-export async function fetchSuggestionVideos(videoPublicId: string): Promise<string> {
+export async function fetchSuggestionVideos(
+  videoPublicId: string
+): Promise<string> {
   const url = `${BASE_URL}/videos/get-suggestion-vidoes/${videoPublicId}`;
   try {
     const response = await axios.get(url, {
@@ -49,25 +50,6 @@ export async function fetchSuggestionVideos(videoPublicId: string): Promise<stri
     return "";
   }
 }
-
-const fiterVideos = () => {
-  searchEl.addEventListener("keydown", async (event) => {
-    if (event.key === "Enter") {
-      displayVideos();
-    }
-  });
-};
-
-const displayVideos = async () => {
-  const videos = await fetchVideos();
-  const videoContainer = document.getElementById(
-    "video-grid"
-  ) as HTMLDivElement;
-  videoContainer.innerHTML = videos;
-  // await navbarHandler();
-};
-
-
 
 
 export const fetchVideoById = async (videoPublicId: string) => {

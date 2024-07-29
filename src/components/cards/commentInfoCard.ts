@@ -1,4 +1,5 @@
 import { ICommentCard } from "../../interface/commentCard";
+import { timeSinceUpload } from "../../utils/dataFormatter";
 import { CommentCard } from "./commentCard";
 import { CommentInputCard } from "./commentInputCard";
 
@@ -11,7 +12,12 @@ export const CommentInfoCard = (comments: ICommentCard[]) => `
             <div id="done-comments-container">
                 ${comments
                   .map((comment) =>
-                    CommentCard(comment.email, comment.text, comment.imageSrc)
+                    CommentCard(
+                      comment.user.fullName,
+                      comment.text,
+                      comment.user.profileUrl || "/public/userIcon.png",
+                      timeSinceUpload(comment.createdAt)
+                    )
                   )
                   .join("")}
             </div>

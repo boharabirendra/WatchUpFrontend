@@ -59,6 +59,21 @@
           />
         </div>
         <div>
+          <label for="role" class="block text-sm font-medium text-gray-700">
+            Role <span class="text-red-500">*</span>
+          </label>
+          <select
+            id="role"
+            name="role"
+            class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition duration-150 ease-in-out"
+            required
+          >
+            <option value="">Select a role</option>
+            <option value="VIEWER">VIEWER</option>
+            <option value="CREATOR">CREATOR</option>
+          </select>
+        </div>
+        <div>
           <label for="profile" class="block text-sm font-medium text-gray-700">
             Profile Photo
           </label>

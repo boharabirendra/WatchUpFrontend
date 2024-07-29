@@ -27,7 +27,6 @@ const sidebarChangeProfileElement = document.getElementById(
 export const navbarHandler = async () => {
   try {
     const user = await getUser();
-    console.log(user);
     if (user) {
       navbarProfileElement.src = user.profileUrl || "/public/userIcon.png";
       sidebarLoginElement.classList.add("hidden");

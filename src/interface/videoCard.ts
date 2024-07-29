@@ -5,17 +5,19 @@ export interface IVideo{
     title: string;
     description: string;
     userEmail: string;
+    likes: number;
     views: number;
-    timeSinceUpload: string;
+    createdAt: Date;
     videoPublicId: string;
     duration: number;
+    id: number;
+    userVideos: [{
+        userId: number;
+        fullName: string;
+        email: string;
+        profileUrl: string;
+    }]
 }
 
-export interface IVideoInfo{
-    fullName: string;
-    views: number;
-    likes: number;
-    description: string;
-    title: string;
-}
+
 
