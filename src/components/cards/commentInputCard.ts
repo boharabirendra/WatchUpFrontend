@@ -2,7 +2,7 @@ export const CommentInputCard = () => `
   <div class="mt-8 flex gap-4">
     <div>
       <img
-        src="./public/sample.jpeg"
+        src="${localStorage.getItem("profileUrl") || "./public/sample.jpeg"}"
         class="h-10 w-10 rounded-full"
         alt="user"
       />
