@@ -4,15 +4,15 @@ import { spinnerStart, spinnerStop } from "../../utils/common";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const signupForm = document.getElementById("signupForm") as HTMLFormElement;
-  const signupSpinner = document.getElementById("signup__spinner") as HTMLSpanElement;
+  const signupFormElement = document.getElementById("signupForm") as HTMLFormElement;
+  const signupSpinnerElement = document.getElementById("signup__spinner") as HTMLSpanElement;
   const signupErrorElement = document.getElementById("signup-error") as HTMLParagraphElement;
 
-  signupForm.addEventListener("submit", async (event) => {
+  signupFormElement.addEventListener("submit", async (event) => {
     event.preventDefault();
-    spinnerStart(signupSpinner);
+    spinnerStart(signupSpinnerElement);
     try {
-      const formData = new FormData(signupForm);
+      const formData = new FormData(signupFormElement);
       await axios.post(`${BASE_URL}/users/register`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
         signupErrorElement.classList.add("hidden");
       }, 2000);
     } finally {
-      spinnerStop(signupSpinner);
+      spinnerStop(signupSpinnerElement);
     }
   });
 

@@ -1,6 +1,10 @@
 export interface ICommentCard{
-    imageSrc: string;
-    email: string;
+    createdAt: Date,
     text: string;
+    user: {
+        email: string;
+        profileUrl: string;
+        fullName: string
+    }
 }
 

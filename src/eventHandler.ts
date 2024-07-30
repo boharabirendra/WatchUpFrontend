@@ -1,6 +1,9 @@
+import axios from "axios";
 import { getLikeStatus, updateLikeCount } from "./components/likes/likes";
 import { mustLoginMessage } from "./utils/common";
-import { isUserAuthenticated } from "./utils/verifyUser";
+import { BASE_URL } from "./constants/constants";
+import { getComments } from "./components/comments/comment";
+import { CommentInfoCard } from "./components/cards/commentInfoCard";
 
 /**Comment event section */
 export const handleComment = () => {
@@ -17,6 +20,10 @@ export const handleComment = () => {
   const commentInputBoxElement = document.getElementById(
     "comment-input-box"
   ) as HTMLTextAreaElement;
+
+  const commentMessageElement = document.getElementById(
+    "comment-message"
+  ) as HTMLParagraphElement;
 
   const updateSubmitButtonState = () => {
     const isEmpty = commentInputBoxElement.value.trim() === "";
@@ -50,9 +57,39 @@ export const handleComment = () => {
   });
 
   submitCommentElement.addEventListener("click", async () => {
-    if(!(await mustLoginMessage())) return;
-  });
+    if (!(await mustLoginMessage())) return;
+    const formData = new FormData();
+    const urlParams = new URLSearchParams(window.location.search);
+    const comment = commentInputBoxElement.value.trim();
+    const videoId = urlParams.get("videoId")!;
+    formData.append("text", comment);
+    formData.append("videoId", videoId);
+    try {
+      await axios.post(`${BASE_URL}/comments/create-comment`, formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      commentMessageElement.classList.add("text-green-500");
+      commentMessageElement.innerHTML = "Comment added successfully";
+      commentInputBoxElement.value = "";
 
+      /**Updating comments */
+      const commentsContainerElement = document.getElementById(
+        "video-comment-container"
+      ) as HTMLDivElement;
+      const comments = await getComments(videoId);
+      commentsContainerElement.innerHTML = CommentInfoCard(comments);
+    } catch (error: any) {
+      commentMessageElement.classList.add("text-red-500");
+      commentMessageElement.innerHTML = error.response.data.message;
+    } finally {
+      setTimeout(() => {
+        commentMessageElement.innerHTML = "";
+      }, 4000);
+    }
+  });
   updateSubmitButtonState();
 };
 
@@ -81,7 +118,7 @@ export const likesHandler = async () => {
   }
 
   likeButton.addEventListener("click", async () => {
-    if(!(await mustLoginMessage())) return;
+    if (!(await mustLoginMessage())) return;
     const searchParams = new URLSearchParams(window.location.search);
     const videoPublicId = searchParams.get("v");
     if (videoPublicId) {
@@ -95,8 +132,6 @@ export const likesHandler = async () => {
     }, 200);
   });
 };
-
-
 
 document.addEventListener("DOMContentLoaded", () => {
   const sidebarToggle = document.getElementById(

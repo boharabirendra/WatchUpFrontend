@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     videoUploadFormEl.classList.add("opacity-25");
     const formData = new FormData(videoUploadFormEl);
     try {
-      const response = await axios.post(
+       await axios.post(
         `${BASE_URL}/videos/add-video`,
         formData,
         {
@@ -27,7 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
           },
         }
       );
-      console.log(response.data);
     } catch (error: any) {
       console.log(error);
       uploadErrorEl.innerHTML = error.response.data.message;
