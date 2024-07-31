@@ -2,27 +2,16 @@ import axios from "axios";
 import { getUser } from "../../utils/getUser";
 import { BASE_URL } from "../../constants/constants";
 import { spinnerStart, spinnerStop } from "../../utils/common";
+import { DEFAULT_IMAGE_URL } from "../constants/constants";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const changeProfileFullNameElement = document.getElementById(
-    "fullname"
-  ) as HTMLInputElement;
-  const changeProfilePictureElement = document.getElementById(
-    "profile-picture"
-  ) as HTMLInputElement;
-  const changeProfilePreviewElement = document.getElementById(
-    "profile-preview"
-  ) as HTMLImageElement;
-  const changeProfileFormElement = document.getElementById(
-    "update-profile-form"
-  ) as HTMLFormElement;
-  const changeProfileSpinnerElement = document.getElementById(
-    "profile-change-spinner"
-  ) as HTMLSpanElement;
-  const changeProfileUpdateAccountBtnElement = document.getElementById(
-    "update-account-btn"
-  ) as HTMLButtonElement;
-
+  const changeProfileFullNameElement = document.getElementById("fullname") as HTMLInputElement;
+  const changeProfilePictureElement = document.getElementById("profile-picture") as HTMLInputElement;
+  const changeProfilePreviewElement = document.getElementById("profile-preview") as HTMLImageElement;
+  const changeProfileFormElement = document.getElementById("update-profile-form") as HTMLFormElement;
+  const changeProfileMessageElement = document.getElementById("update-profile-message") as HTMLDivElement;
+  const changeProfileSpinnerElement = document.getElementById("profile-change-spinner") as HTMLSpanElement;
+  const changeProfileUpdateAccountBtnElement = document.getElementById("update-account-btn") as HTMLButtonElement;
 
   changeProfileFullNameElement.addEventListener("focus", () => {
     changeUpdateAccountUI();
@@ -32,16 +21,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     changeUpdateAccountUI();
   });
 
-
   try {
     const user = await getUser();
     changeProfileFullNameElement.value = user.fullName;
-    changeProfilePreviewElement.src = user.profileUrl || "/public/userIcon.png";
+    changeProfilePreviewElement.src = user.profileUrl || DEFAULT_IMAGE_URL;
 
     changeProfileFormElement.addEventListener("submit", async (event) => {
-      changeProfileFormElement.classList.add("opacity-25");
-      spinnerStart(changeProfileSpinnerElement);
       event.preventDefault();
+      spinnerStart(changeProfileSpinnerElement);
+      changeProfileFormElement.classList.add("opacity-25");
+
       const formData = new FormData(changeProfileFormElement);
       await axios.put(`${BASE_URL}/users/update-user`, formData, {
         headers: {
@@ -49,19 +38,44 @@ document.addEventListener("DOMContentLoaded", async () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      location.href = "/";
+      showUpdateMessage(true);
     });
   } catch (error) {
     console.log(error);
-  } finally {
-    spinnerStop(changeProfileSpinnerElement);
-    changeProfileFormElement.classList.remove("opacity-25");
-  }
+    showUpdateMessage(false, error);
+  } 
 
   function changeUpdateAccountUI() {
-    changeProfileUpdateAccountBtnElement.classList.remove("cursor-not-allowed");
-    changeProfileUpdateAccountBtnElement.classList.remove("bg-gray-300");
-    changeProfileUpdateAccountBtnElement.classList.add("bg-indigo-500");
     changeProfileUpdateAccountBtnElement.disabled = false;
+    changeProfileUpdateAccountBtnElement.classList.add("bg-indigo-500");
+    changeProfileUpdateAccountBtnElement.classList.remove("bg-gray-300");
+    changeProfileUpdateAccountBtnElement.classList.remove("cursor-not-allowed");
+  }
+
+  changeProfilePictureElement.addEventListener("change", (event: Event): void => {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files[0]) {
+      const reader = new FileReader();
+
+      reader.onload = function (e: ProgressEvent<FileReader>) {
+        if (e.target && typeof e.target.result === "string") {
+          changeProfilePreviewElement.src = e.target.result;
+        }
+      };
+      reader.readAsDataURL(target.files[0]);
+    }
+  });
+
+  function showUpdateMessage(success: boolean, error?: any) {
+    if (success) {
+      changeProfileFormElement.reset();
+      spinnerStop(changeProfileSpinnerElement);
+      changeProfileFormElement.classList.remove("opacity-25");
+      changeProfileMessageElement.classList.add("text-green-600");
+      changeProfileMessageElement.innerHTML = "Profile updated successfully.";
+    } else {
+      changeProfileMessageElement.classList.add("text-red-600");
+      changeProfileFormElement.innerHTML = error.response.data.message;
+    }
   }
 });

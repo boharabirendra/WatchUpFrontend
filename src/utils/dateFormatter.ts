@@ -1,4 +1,4 @@
-export const timeSinceUpload = (uploadDate: Date): string => {
+export const timeAndDateFormater = (uploadDate: Date): string => {
     const now = new Date();
     const uploadTime = new Date(uploadDate);
     const timeDifference = now.getTime() - uploadTime.getTime();

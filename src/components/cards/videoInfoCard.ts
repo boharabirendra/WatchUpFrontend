@@ -1,25 +1,26 @@
 import { IVideo } from "../../interface/videoCard";
-import { timeSinceUpload } from "../../utils/dataFormatter";
+import { timeAndDateFormater } from "../../utils/dateFormatter";
+import { DEFAULT_IMAGE_URL } from "../constants/constants";
 import { mustLoginMessageCard } from "./mustLoginMessageCard";
 import { VideoDescriptionCard } from "./videoDescriptionCard";
 
-export const VideoInfoCard = (video:IVideo) => `
+export const VideoInfoCard = (video: IVideo) => `
         <div class="mt-4">
           <div><h1 class="text-xl font-semibold">${video.title}</h1></div>
           <div class="min-w-12 mt-2 flex gap-4">
             <div>
               <img
-                src="${video.profileUrl || "/public/userIcon.png"}"
+                src="${video.userVideos[0].profileUrl || DEFAULT_IMAGE_URL}"
                 class="h-12 w-12 rounded-full"
                 alt="user"
               />
             </div>
             <div class="flex gap-4 items-center">
               <div>
-                <p>@${video.userVideos[0].email}</p>
+                <p>@${video.userVideos[0].fullName}</p>
                 <div class="flex gap-3 text-sm text-gray-400">
                   <p>${video.views} views</p>
-                  <p>${timeSinceUpload(video.createdAt)}</p>
+                  <p>${timeAndDateFormater(video.createdAt)}</p>
                 </div>
               </div>
              <div class="flex items-center gap-3">
