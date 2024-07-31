@@ -1,49 +1,34 @@
-import fetchVideos, {
-  fetchSuggestionVideos,
-  fetchVideoById,
-} from "./components/videos/video";
 import { IVideo } from "./interface/videoCard";
 import { getComments } from "./components/comments/comment";
-import { handleComment, likesHandler } from "./eventHandler";
 import { ViewTracker } from "./components/views/viewTracker";
 import { VideoPlayer } from "./components/player/videoPlayer";
 import { VideoInfoCard } from "./components/cards/videoInfoCard";
 import { CommentInfoCard } from "./components/cards/commentInfoCard";
 import { logoutHandler, navbarHandler } from "./components/nav/navbarHandler";
 
+import { fetchVideos, fetchVideoById, fetchSuggestionVideos } from "./components/videos/video";
+import { likesHandler, handleComment, handleCommentDeletion, handleCommentEdit } from "./eventHandler";
+
 class VideoController {
   private filter: string;
   private videoId: string;
   private videoGridElement: HTMLDivElement;
-  private videoPlayerElement: HTMLDivElement;
   private mainVideoElement: HTMLVideoElement;
+  private videoPlayerElement: HTMLDivElement;
   private videoSearchElement: HTMLInputElement;
   private suggestedVideosElement: HTMLDivElement;
   private videoInfoContainerElement: HTMLDivElement;
   private videoCommentContainerElement: HTMLDivElement;
 
   constructor() {
-    this.videoGridElement = document.getElementById(
-      "video-grid"
-    ) as HTMLDivElement;
-    this.mainVideoElement = document.getElementById(
-      "main-video"
-    ) as HTMLVideoElement;
-    this.videoSearchElement = document.getElementById(
-      "search"
-    ) as HTMLInputElement;
-    this.videoPlayerElement = document.getElementById(
-      "video-player"
-    ) as HTMLDivElement;
-    this.suggestedVideosElement = document.getElementById(
-      "suggested-videos"
-    ) as HTMLDivElement;
-    this.videoInfoContainerElement = document.getElementById(
-      "video-info-container"
-    ) as HTMLDivElement;
-    this.videoCommentContainerElement = document.getElementById(
-      "video-comment-container"
-    ) as HTMLDivElement;
+    this.videoGridElement = document.getElementById("video-grid") as HTMLDivElement;
+    this.videoSearchElement = document.getElementById("search") as HTMLInputElement;
+    this.mainVideoElement = document.getElementById("main-video") as HTMLVideoElement;
+    this.videoPlayerElement = document.getElementById("video-player") as HTMLDivElement;
+    this.suggestedVideosElement = document.getElementById("suggested-videos") as HTMLDivElement;
+    this.videoInfoContainerElement = document.getElementById("video-info-container") as HTMLDivElement;
+    this.videoCommentContainerElement = document.getElementById("video-comment-container") as HTMLDivElement;
+
     this.filter = "";
     this.videoId = "";
     this.init();
@@ -59,8 +44,8 @@ class VideoController {
   private async renderVideoGrid(filter: string) {
     const videos = await fetchVideos(filter);
     this.videoGridElement.innerHTML = videos;
-    this.videoGridElement.addEventListener("click", (e) => {
-      const videoItem = (e.target as HTMLElement).closest("#video-item");
+    this.videoGridElement.addEventListener("click", (event) => {
+      const videoItem = (event.target as HTMLElement).closest("#video-item");
       if (videoItem) {
         const videoPublicId = videoItem.getAttribute("data-videoPublicId");
         this.videoId = videoItem.getAttribute("data-videoId")!;
@@ -89,13 +74,12 @@ class VideoController {
       this.loadVideoInfo(video[0]);
       await this.loadCommentInfo();
       await this.renderSuggestedVideos(videoPublicId);
-      history.pushState(
-        null,
-        "",
-        `?v=${videoPublicId}&videoId=${this.videoId}`
-      );
-      handleComment();
+      history.pushState(null, "", `?v=${videoPublicId}&videoId=${this.videoId}`);
+      
       likesHandler();
+      handleComment();
+      handleCommentEdit();
+      handleCommentDeletion();
     }
   }
 
@@ -154,9 +138,7 @@ logoutHandler();
 
 /**Adding shortcut */
 document.addEventListener("DOMContentLoaded", () => {
-  const videoSearchElement = document.getElementById(
-    "search"
-  ) as HTMLInputElement;
+  const videoSearchElement = document.getElementById("search") as HTMLInputElement;
   document.addEventListener("keydown", (event) => {
     if (event.key === "/") {
       event.preventDefault();

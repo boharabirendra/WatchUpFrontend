@@ -1,4 +1,3 @@
-
 export const VideoPlayerComponent = (title: string) => {
   return `
       <div class="basis-[75%]">

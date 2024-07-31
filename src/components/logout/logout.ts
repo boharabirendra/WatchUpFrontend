@@ -15,6 +15,8 @@ export const logoutUser = async () => {
     if (response.status === 200) {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("profileUrl");
     }
   } catch (error) {
     console.error("Error while logout: ", error);

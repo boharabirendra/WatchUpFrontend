@@ -8,7 +8,8 @@ module.exports = {
         bodybgcolor: '#100E0E',
         bglikebtn: '#303030',
         bgdescription: '#2B2A2A',
-        bgbuttondisabledcolor: '#272727'
+        bgbuttondisabledcolor: '#272727',
+        bgdeletemodal: '#212121',
       },
     },
   },
